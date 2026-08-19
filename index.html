@@ -257,6 +257,45 @@
   .cols a.mail:hover{ border-bottom-color:var(--teal); }
   .addr{ font-family:var(--f-mono); font-size:13.5px; line-height:1.7; color:var(--ink); }
 
+  /* ---------------- REGISTRATION ---------------- */
+  .reg-intro{ max-width:62ch; color:var(--muted); margin:0 0 28px; }
+  .reg-grid{ display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:start; }
+  .reg-form h3, .reg-list h3{ font-family:var(--f-display); font-weight:600; font-size:1.05rem; margin:0 0 16px; }
+  .field{ margin:0 0 14px; }
+  .field > label{ display:block; font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0 0 6px; }
+  .field input[type=text], .field input[type=email]{
+    width:100%; padding:10px 12px; font-family:var(--f-body); font-size:15px; color:var(--ink);
+    background:var(--card); border:1px solid var(--line); border-radius:8px;
+  }
+  .field input[type=text]:focus, .field input[type=email]:focus{
+    outline:none; border-color:var(--ochre); box-shadow:0 0 0 3px rgba(200,138,46,0.16);
+  }
+  .field.check > label{ display:flex; align-items:flex-start; gap:9px; font-family:var(--f-body);
+    font-size:14.5px; letter-spacing:0; text-transform:none; color:var(--ink); cursor:pointer; margin:0; }
+  .field.check input{ margin-top:2px; width:16px; height:16px; accent-color:var(--ochre); flex:0 0 auto; }
+  .reg-btn{ font-family:var(--f-display); font-weight:600; font-size:15px; color:#fff; background:var(--ink);
+    border:0; border-radius:8px; padding:11px 24px; cursor:pointer; margin-top:4px; }
+  .reg-btn:hover{ background:#0E1B22; }
+  .reg-btn:disabled{ opacity:.55; cursor:default; }
+  .reg-msg{ font-size:14px; margin:12px 0 0; min-height:1.1em; }
+  .reg-msg.ok{ color:var(--teal); }
+  .reg-msg.err{ color:#B4553C; }
+  .reg-priv{ font-size:12.5px; color:var(--muted); margin:14px 0 0; }
+  .reg-list{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; }
+  .reg-list h3 .count{ font-family:var(--f-mono); font-size:13px; color:var(--muted); font-weight:400; }
+  .reg-items{ display:flex; flex-direction:column; max-height:420px; overflow:auto; }
+  .reg-item{ display:flex; align-items:center; gap:10px; padding:10px 2px; border-bottom:1px solid var(--line); }
+  .reg-item:last-child{ border-bottom:0; }
+  .reg-item .nm{ font-weight:600; }
+  .reg-item .af{ color:var(--muted); font-size:.92rem; }
+  .reg-item .chip{ font-family:var(--f-mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--teal); background:var(--teal-lo); border:1px solid #BEDAD6; border-radius:5px; padding:2px 7px; margin-left:auto; }
+  .reg-empty{ color:var(--muted); font-size:.95rem; margin:6px 0; }
+  .reg-note{ margin:28px 0 0; padding:14px 16px; background:var(--ochre-lo); border:1px solid #EBD6AE;
+    border-radius:8px; font-size:13px; line-height:1.55; color:#7A5B22; }
+  .reg-note code{ font-family:var(--f-mono); font-size:12px; background:rgba(0,0,0,0.05); padding:1px 5px; border-radius:4px; }
+  @media (max-width:640px){ .reg-grid{ grid-template-columns:1fr; gap:30px; } }
+
   /* ---------------- FOOTER ---------------- */
   footer{ background:var(--ink); color:#B7C8C8; padding:40px 0; }
   .foot-row{ display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; }
@@ -424,7 +463,7 @@
     <div class="hero-foot">
       <span>Organized by <b>Won Kyu Kim</b></span>
       <span>Hosted &amp; supported by <b>KIAS</b></span>
-      <span><b>Registration:</b> not required — all welcome</span>
+      <span><b>Registration:</b> free &amp; open — <a href="#register" style="color:var(--ochre); text-decoration:none; border-bottom:1px solid rgba(200,138,46,.5);">register below</a></span>
     </div>
   </div>
 </header>
@@ -576,10 +615,63 @@
   </div>
 </section>
 
+<!-- ============ REGISTRATION ============ -->
+<section class="band" id="register">
+  <div class="wrap">
+    <div class="sec-label"><span class="sec-num">03</span><h2>Registration</h2></div>
+    <p class="reg-intro">Attendance is free and open to all. Registering is optional but helps us plan seating, catering, and the poster session.</p>
+
+    <div class="reg-grid">
+      <!-- form -->
+      <div class="reg-form">
+        <h3>Register</h3>
+        <div class="field">
+          <label for="regName">Name</label>
+          <input id="regName" type="text" autocomplete="name" placeholder="Your name" />
+        </div>
+        <div class="field">
+          <label for="regAffil">Affiliation</label>
+          <input id="regAffil" type="text" autocomplete="organization" placeholder="Institution / group" />
+        </div>
+        <div class="field">
+          <label for="regEmail">Email</label>
+          <input id="regEmail" type="email" autocomplete="email" placeholder="you@example.ac.kr" />
+        </div>
+        <div class="field check">
+          <label><input id="regPoster" type="checkbox" /> <span>I plan to present a poster</span></label>
+        </div>
+        <div class="field" id="posterTitleWrap" hidden>
+          <label for="regPosterTitle">Poster title (optional)</label>
+          <input id="regPosterTitle" type="text" placeholder="Working title" />
+        </div>
+        <div class="field check">
+          <label><input id="regPublic" type="checkbox" checked /> <span>Show my name on the public participant list</span></label>
+        </div>
+        <button class="reg-btn" id="regSubmit" type="button">Register</button>
+        <p class="reg-msg" id="regMsg" role="status" aria-live="polite"></p>
+        <p class="reg-priv">Your email is used only by the organizer for workshop communication and is never shown publicly.</p>
+      </div>
+
+      <!-- list -->
+      <div class="reg-list">
+        <h3>Participants <span class="count" id="regCount"></span></h3>
+        <div class="reg-items" id="regItems"></div>
+      </div>
+    </div>
+
+    <!-- Organizer note: shown only until a backend endpoint is configured. -->
+    <div class="reg-note" id="regDemoNote" hidden>
+      <strong>Set-up note (visible only to you until configured):</strong>
+      registrations are currently stored in the browser for preview only and are <em>not</em> shared between visitors.
+      To collect real registrations on your hosted page, deploy the Google&nbsp;Apps&nbsp;Script web app (see the instructions you were given) and paste its URL into the <code>REG_ENDPOINT</code> value near the bottom of this file. This note disappears automatically once that URL is set.
+    </div>
+  </div>
+</section>
+
 <!-- ============ VENUE + ORGANIZER ============ -->
 <section class="band">
   <div class="wrap">
-    <div class="sec-label"><span class="sec-num">03</span><h2>Venue &amp; contact</h2></div>
+    <div class="sec-label"><span class="sec-num">04</span><h2>Venue &amp; contact</h2></div>
     <div class="cols">
       <div>
         <h3>Venue</h3>
@@ -659,6 +751,105 @@
 
     var rt;
     window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(layout, 200); });
+  })();
+</script>
+
+<script>
+  // ============================================================
+  //  PARTICIPANT REGISTRATION
+  //  To collect real, shared registrations on your hosted page,
+  //  paste your Google Apps Script web-app URL between the quotes:
+  const REG_ENDPOINT = "https://script.google.com/macros/s/AKfycbxcrls_uS1_LrFZy8gasJcySDq82j0MdEySEw1o5A24CMHCGpaVgHskDf1dOpQVpZWTxw/exec";
+  //  Leave it empty for local preview only (data is NOT shared).
+  // ============================================================
+  (function(){
+    var $ = function(id){ return document.getElementById(id); };
+    var nameEl=$('regName'), affilEl=$('regAffil'), emailEl=$('regEmail'),
+        posterEl=$('regPoster'), posterTitleWrap=$('posterTitleWrap'), posterTitleEl=$('regPosterTitle'),
+        publicEl=$('regPublic'), btn=$('regSubmit'), msg=$('regMsg'),
+        itemsEl=$('regItems'), countEl=$('regCount'), demoNote=$('regDemoNote');
+    if(!btn) return;
+
+    var LOCAL_MODE = !REG_ENDPOINT;
+    if(LOCAL_MODE && demoNote) demoNote.hidden = false;
+
+    posterEl.addEventListener('change', function(){ posterTitleWrap.hidden = !posterEl.checked; });
+
+    function esc(s){ return String(s||'').replace(/[&<>"]/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+    // ---- storage layer: real endpoint > artifact preview store > localStorage ----
+    async function loadList(){
+      if(REG_ENDPOINT){
+        var r = await fetch(REG_ENDPOINT + '?action=list', {cache:'no-store'});
+        var text = await r.text();
+        var d;
+        try{ d = JSON.parse(text); }
+        catch(err){
+          console.error('[registration] endpoint did not return JSON — check the Apps Script deployment. First bytes:\n', text.slice(0,300));
+          throw new Error('endpoint-not-json');
+        }
+        if(d && d.error){ console.error('[registration] endpoint returned an error:', d.error); throw new Error('endpoint-error'); }
+        return (d && d.participants) || [];
+      }
+      if(window.storage){
+        try{ var g = await window.storage.get('participants', true); return g ? JSON.parse(g.value) : []; }
+        catch(e){ return []; }
+      }
+      try{ return JSON.parse(localStorage.getItem('bsm_participants')||'[]'); }catch(e){ return []; }
+    }
+    async function saveLocal(list){
+      if(window.storage){ try{ await window.storage.set('participants', JSON.stringify(list), true); return; }catch(e){} }
+      localStorage.setItem('bsm_participants', JSON.stringify(list));
+    }
+    async function addRecord(rec){
+      if(REG_ENDPOINT){
+        await fetch(REG_ENDPOINT, { method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(rec) });
+        return;
+      }
+      var list = await loadList(); list.push(rec); await saveLocal(list);
+    }
+
+    function render(list){
+      // public list shows name + affiliation only (never email)
+      var pub = list.filter(function(p){ return p.public !== false; });
+      countEl.textContent = pub.length ? '· ' + pub.length : '';
+      if(!pub.length){ itemsEl.innerHTML = '<p class="reg-empty">No participants listed yet — be the first to register.</p>'; return; }
+      itemsEl.innerHTML = pub.map(function(p){
+        var chip = p.poster ? '<span class="chip">Poster</span>' : '';
+        var af = p.affiliation ? ' <span class="af">· '+esc(p.affiliation)+'</span>' : '';
+        return '<div class="reg-item"><span class="nm">'+esc(p.name)+'</span>'+af+chip+'</div>';
+      }).join('');
+    }
+
+    function setMsg(text, kind){ msg.textContent = text; msg.className = 'reg-msg' + (kind? ' '+kind : ''); }
+
+    async function refresh(){
+      try{ render(await loadList()); }
+      catch(e){ console.error('[registration] could not load list:', e); itemsEl.innerHTML = '<p class="reg-empty">Could not load the participant list right now.</p>'; }
+    }
+
+    btn.addEventListener('click', async function(){
+      var name = nameEl.value.trim(), affil = affilEl.value.trim(), email = emailEl.value.trim();
+      if(!name){ setMsg('Please enter your name.', 'err'); nameEl.focus(); return; }
+      if(!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ setMsg('Please enter a valid email.', 'err'); emailEl.focus(); return; }
+      var rec = { name:name, affiliation:affil, email:email,
+        poster: posterEl.checked, posterTitle: posterEl.checked ? posterTitleEl.value.trim() : '',
+        public: publicEl.checked, ts: new Date().toISOString() };
+      btn.disabled = true; setMsg('Submitting…');
+      try{
+        await addRecord(rec);
+        setMsg('Thanks, ' + name + ' — you are registered!', 'ok');
+        nameEl.value=''; affilEl.value=''; emailEl.value='';
+        posterEl.checked=false; posterTitleEl.value=''; posterTitleWrap.hidden=true; publicEl.checked=true;
+        await refresh();
+      }catch(e){
+        setMsg('Sorry, registration failed. Please try again or email the organizer.', 'err');
+      }finally{ btn.disabled = false; }
+    });
+
+    refresh();
   })();
 </script>
 
