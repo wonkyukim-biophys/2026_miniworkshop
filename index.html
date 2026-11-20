@@ -213,7 +213,7 @@
   }
   .title{ font-family:var(--f-display); font-weight:600; font-size:1.06rem; line-height:1.25; }
   .meta{ color:var(--muted); font-size:.95rem; margin-top:2px; }
-  .ph{ color:var(--ink); font-style:normal; }   /* placeholder text */
+  .ph{ color:var(--ink); font-style:normal; }   /* talk title text */
 
   /* talk cards get a raised surface */
   .slot.talk .slot-body{
@@ -260,6 +260,8 @@
   /* ---------------- REGISTRATION ---------------- */
   .reg-intro{ max-width:62ch; color:var(--muted); margin:0 0 28px; }
   .reg-grid{ display:grid; grid-template-columns:1fr 1fr; gap:44px; align-items:start; }
+  .reg-grid.closed{ grid-template-columns:1fr; }
+  .reg-grid.closed .reg-form{ display:none; }
   .reg-form h3, .reg-list h3{ font-family:var(--f-display); font-weight:600; font-size:1.05rem; margin:0 0 16px; }
   .field{ margin:0 0 14px; }
   .field > label{ display:block; font-family:var(--f-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0 0 6px; }
@@ -283,9 +285,8 @@
   .reg-priv{ font-size:12.5px; color:var(--muted); margin:14px 0 0; }
   .reg-list{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; }
   .reg-list h3 .count{ font-family:var(--f-mono); font-size:13px; color:var(--muted); font-weight:400; }
-  .reg-items{ display:flex; flex-direction:column; } /*max-height:420px; overflow:auto; } */
+  .reg-items{ display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); column-gap:36px; }
   .reg-item{ display:flex; align-items:center; gap:10px; padding:10px 2px; border-bottom:1px solid var(--line); }
-  .reg-item:last-child{ border-bottom:0; }
   .reg-item .nm{ font-weight:600; }
   .reg-item .af{ color:var(--muted); font-size:.92rem; }
   .reg-item .chip{ font-family:var(--f-mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase;
@@ -294,6 +295,15 @@
   .reg-note{ margin:28px 0 0; padding:14px 16px; background:var(--ochre-lo); border:1px solid #EBD6AE;
     border-radius:8px; font-size:13px; line-height:1.55; color:#7A5B22; }
   .reg-note code{ font-family:var(--f-mono); font-size:12px; background:rgba(0,0,0,0.05); padding:1px 5px; border-radius:4px; }
+
+  /* registration-closed notice */
+  .reg-closed{ background:var(--card); border:1px solid var(--line); border-left:4px solid var(--ochre);
+    border-radius:10px; padding:20px 24px; margin:0 0 28px; }
+  .reg-closed-badge{ display:inline-block; font-family:var(--f-mono); font-size:11px; letter-spacing:.14em;
+    text-transform:uppercase; color:#fff; background:var(--ochre); border-radius:5px; padding:4px 10px; margin-bottom:11px; }
+  .reg-closed p{ margin:0; color:var(--ink); font-size:1rem; line-height:1.55; }
+  .reg-closed a.mail{ color:var(--teal); text-decoration:none; border-bottom:1px solid var(--teal-lo); }
+
   @media (max-width:640px){ .reg-grid{ grid-template-columns:1fr; gap:30px; } }
 
   /* ---------------- FOOTER ---------------- */
@@ -463,7 +473,7 @@
     <div class="hero-foot">
       <span>Organized by <b>Won Kyu Kim</b></span>
       <span>Hosted &amp; supported by <b>KIAS</b></span>
-      <span><b>Registration:</b> free &amp; open until Nov. 20 (Friday) — <a href="#register" style="color:var(--ochre); text-decoration:none; border-bottom:1px solid rgba(200,138,46,.5);">register below</a></span>
+      <span><b>Registration:</b> now closed (as of Nov. 20) — <a href="#register" style="color:var(--ochre); text-decoration:none; border-bottom:1px solid rgba(200,138,46,.5);">see participants</a></span>
     </div>
   </div>
 </header>
@@ -543,7 +553,6 @@
         <div class="slot-body">
           <span class="kind">Poster Session · 60 min</span>
           <div class="title">Posters &amp; Refreshments</div>
-          <div class="meta"><span class="ph"></span></div>
         </div>
       </div>
 
@@ -611,7 +620,7 @@
 
     </div>
 
-    <p class="prog-note">// Placeholder program — speakers, titles, and poster list to be confirmed. Timings are flexible.</p>
+    <p class="prog-note">Program subject to minor changes.</p>
   </div>
 </section>
 
@@ -619,9 +628,19 @@
 <section class="band" id="register">
   <div class="wrap">
     <div class="sec-label"><span class="sec-num">03</span><h2>Registration</h2></div>
-    <p class="reg-intro">Attendance is free and open to all. Registering is optional but helps us plan seating, catering, and the poster session.</p>
 
-    <div class="reg-grid">
+    <!-- Closed notice: shown when REG_CLOSED is true (see script at the bottom) -->
+    <div class="reg-closed" id="regClosed" hidden>
+      <span class="reg-closed-badge">Registration closed</span>
+      <p>Thank you for the strong interest — registration closed on <b>November&nbsp;20, 2026</b>.
+      For any late inquiries, please email the organizer at
+      <a class="mail" href="mailto:wonkyukim@kias.re.kr">wonkyukim@kias.re.kr</a>.
+      The registered participants are listed below.</p>
+    </div>
+
+    <p class="reg-intro" id="regIntro">Attendance is free and open to all. Registering is optional but helps us plan seating, catering, and the poster session.</p>
+
+    <div class="reg-grid" id="regGrid">
       <!-- form -->
       <div class="reg-form">
         <h3>Register</h3>
@@ -757,23 +776,33 @@
 <script>
   // ============================================================
   //  PARTICIPANT REGISTRATION
-  //  To collect real, shared registrations on your hosted page,
-  //  paste your Google Apps Script web-app URL between the quotes:
+  //  REG_CLOSED  — set to true to close registration: the form is
+  //                hidden and a "closed" notice appears, while the
+  //                participant list stays visible. Set to false to reopen.
+  //  REG_ENDPOINT — your Google Apps Script web-app URL (reads the list).
+  const REG_CLOSED   = true;
   const REG_ENDPOINT = "https://script.google.com/macros/s/AKfycbxcrls_uS1_LrFZy8gasJcySDq82j0MdEySEw1o5A24CMHCGpaVgHskDf1dOpQVpZWTxw/exec";
-  //  Leave it empty for local preview only (data is NOT shared).
   // ============================================================
   (function(){
     var $ = function(id){ return document.getElementById(id); };
     var nameEl=$('regName'), affilEl=$('regAffil'), emailEl=$('regEmail'),
         posterEl=$('regPoster'), posterTitleWrap=$('posterTitleWrap'), posterTitleEl=$('regPosterTitle'),
         publicEl=$('regPublic'), btn=$('regSubmit'), msg=$('regMsg'),
-        itemsEl=$('regItems'), countEl=$('regCount'), demoNote=$('regDemoNote');
-    if(!btn) return;
+        itemsEl=$('regItems'), countEl=$('regCount'), demoNote=$('regDemoNote'),
+        regGrid=$('regGrid'), regIntro=$('regIntro'), regClosed=$('regClosed');
+    if(!itemsEl) return;
+
+    // ---- closed state: hide the form, show the notice, keep the list ----
+    if(REG_CLOSED){
+      if(regGrid) regGrid.classList.add('closed');
+      if(regIntro) regIntro.hidden = true;
+      if(regClosed) regClosed.hidden = false;
+    }
 
     var LOCAL_MODE = !REG_ENDPOINT;
-    if(LOCAL_MODE && demoNote) demoNote.hidden = false;
+    if(LOCAL_MODE && demoNote && !REG_CLOSED) demoNote.hidden = false;
 
-    posterEl.addEventListener('change', function(){ posterTitleWrap.hidden = !posterEl.checked; });
+    if(posterEl) posterEl.addEventListener('change', function(){ posterTitleWrap.hidden = !posterEl.checked; });
 
     function esc(s){ return String(s||'').replace(/[&<>"]/g, function(c){
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
@@ -815,7 +844,7 @@
       // public list shows name + affiliation only (never email)
       var pub = list.filter(function(p){ return p.public !== false; });
       countEl.textContent = pub.length ? '· ' + pub.length : '';
-      if(!pub.length){ itemsEl.innerHTML = '<p class="reg-empty">No participants listed yet — be the first to register.</p>'; return; }
+      if(!pub.length){ itemsEl.innerHTML = '<p class="reg-empty">No participants listed yet.</p>'; return; }
       itemsEl.innerHTML = pub.map(function(p){
         var chip = p.poster ? '<span class="chip">Poster</span>' : '';
         var af = p.affiliation ? ' <span class="af">· '+esc(p.affiliation)+'</span>' : '';
@@ -830,7 +859,8 @@
       catch(e){ console.error('[registration] could not load list:', e); itemsEl.innerHTML = '<p class="reg-empty">Could not load the participant list right now.</p>'; }
     }
 
-    btn.addEventListener('click', async function(){
+    if(btn) btn.addEventListener('click', async function(){
+      if(REG_CLOSED) return;               // guard: no submissions once closed
       var name = nameEl.value.trim(), affil = affilEl.value.trim(), email = emailEl.value.trim();
       if(!name){ setMsg('Please enter your name.', 'err'); nameEl.focus(); return; }
       if(!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ setMsg('Please enter a valid email.', 'err'); emailEl.focus(); return; }
